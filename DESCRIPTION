@@ -1,13 +1,14 @@
-Package: packagetemplate
-Title: Package Template
-Version: 0.0.0.9000
+Package: customSet_bugsigdbr
+Title: customSet 
+Version: 1.0
 Authors@R: 
-    person(given = "J",
-           family = "Wokaty",
+    person(given = "H",
+           family = "Khan",
            role = c("aut", "cre"),
-           email = "jwokaty@users.noreply.github.com",
+           email = "hsadia538@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: A template for creating R packages.
+Description: A package that uses bugsigdbr functionality to extract custom sets
+Dependency: BiocManager::bugsigdbr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

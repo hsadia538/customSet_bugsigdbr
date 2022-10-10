@@ -1,0 +1,90 @@
+---
+title: "Package Name: customSet_bugsigdbr"
+author: "Haleema Khan"
+date: "2022-10-09"
+output: html_document
+---
+
+# Package Description: customSet_bugsigdbr
+
+This is a custom package based off of bugsigdbr package in Bioconductor.bugsigdbr facilitates the import of BugSigDB data and enables us to extract useful details like extracting microbe signatures etc.
+
+Here the customSet packages does the following: 1.
+
+-   Extracts data frames by importing the BugSigDB
+
+-   Filtering the extracted data frame based on study location and year.
+
+-   Get the signature of microbes filters in last step based on taxonomy name and level
+
+-   Write the signatures in a GMT file
+
+-   Returns the filtered data frame
+
+## **Package Quickstart :**
+
+Following parameters need to be decided before using the customSet function:
+
+-   Year filter on the subset e.g "`2012`", "`2014`"
+
+-   Study location e.g "`United States of America`", "`Europe`"
+
+-   Taxonomic level e.g "`species`" or "`genus`"
+
+Taxonomic type e.g "`metaphlan"` , `"taxname`" etc
+
+### **Input Parameters**
+
+-   `studyLocation: string`
+
+-   `year: string`
+
+-   `taxLevel: string`
+
+-   `taxType: string`
+
+### **Output**
+
+-   GMT File called `bugsigdb_signatures.gmt`
+
+-   Filtered data frame.
+
+### Code Description
+
+First we will import the bugsigdbr library to use its functions that will help extracting the signatures.Then by importing the BugSigDb database we will actually create data frames containing the information we need. These data frames will be processes by our functioned and relevant ones will be filtered out.
+
+```{r}
+library(bugsigdbr)
+df <- importBugSigDB(cache = FALSE)
+
+```
+
+A function is designed here in a way where it takes specific filter arguments like location, year and taxonomic information as input and returns a subset of original data frame containing signature. Same is also written to a file.
+
+```{r}
+customSet <- function(df, studyLocation, year ,taxLevel,taxType) {
+
+  us.set <- subset(df,
+                     `Location of subjects` == studyLocation &
+                            Year == year)
+  
+  sig <- getSignatures(us.set, tax.id.type = "taxname",tax.level = "species")
+  writeGMT(sig, gmt.file = "bugsigdb_signatures.gmt")
+  return (sig)
+}
+```
+
+**Examples**
+
+```{r echo=TRUE}
+customData <- customSet(df=df,studyLocation="United States of America" ,year = "2015",taxLevel ="species" ,taxType = "taxname")
+
+knitr::kable(customData,
+ caption = "Table of Data for year 2015")
+```
+
+```{r echo=TRUE}
+customData <- customSet(df=df,studyLocation="United States of America" ,year = "2012",taxLevel ="genus" ,taxType = "metaphlan")
+
+summary(customData)
+```
